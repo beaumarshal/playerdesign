@@ -204,25 +204,29 @@
   height: 2rem;
 }
 
-.player-full__waveform--smooth svg {
+.player-full__waveform--smooth svg,
+.waveform-svg {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
 .waveform-smooth-bg {
   fill: none;
   stroke: var(--player-wave-inactive);
-  stroke-width: 3;
+  stroke-width: 2;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .waveform-smooth-fill {
   fill: none;
   stroke: var(--player-wave-active);
-  stroke-width: 3;
+  stroke-width: 2;
   stroke-linecap: round;
-  stroke-dasharray: 200;
-  stroke-dashoffset: 200;
+  stroke-linejoin: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
 }
 
 /* Waveform - Line */
@@ -234,6 +238,7 @@
 .player-full__waveform--line svg {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
 .waveform-line-bg {
@@ -250,8 +255,8 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
 }
 
 /* Waveform - Blob */
@@ -263,6 +268,7 @@
 .player-full__waveform--blob svg {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
 .blob-bg {
@@ -271,7 +277,6 @@
 
 .blob-fill {
   fill: var(--player-wave-active);
-  clip-path: inset(0 100% 0 0);
 }
 
 /* Waveform - Progress */

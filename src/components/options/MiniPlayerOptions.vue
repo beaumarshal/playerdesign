@@ -9,6 +9,7 @@ import {
   animationOptions
 } from '@/composables/useOptionArrays'
 import OptionsGroup from '@/components/controls/OptionsGroup.vue'
+import ThemeSelector from '@/components/controls/ThemeSelector.vue'
 import ColorInput from '@/components/controls/ColorInput.vue'
 import SelectInput from '@/components/controls/SelectInput.vue'
 import RangeSlider from '@/components/controls/RangeSlider.vue'
@@ -21,6 +22,9 @@ const applyChanges = () => brandStore.applyCssVariables()
 
 <template>
   <div class="options-panels">
+    <!-- Theme Selector -->
+    <ThemeSelector />
+
     <!-- Size & Position -->
     <OptionsGroup title="Size & Position">
       <div class="control-row">
