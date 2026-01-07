@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useBuilderStore } from './stores/builderStore'
 import BuilderHeader from './components/layout/BuilderHeader.vue'
 import ControlsPanel from './components/layout/ControlsPanel.vue'
@@ -8,8 +8,8 @@ import PreviewPanel from './components/layout/PreviewPanel.vue'
 const builderStore = useBuilderStore()
 
 onMounted(() => {
-  // Apply initial theme
-  document.documentElement.setAttribute('data-theme', builderStore.theme)
+  // Initialize theme from system preference and listen for changes
+  builderStore.initTheme()
 })
 </script>
 
