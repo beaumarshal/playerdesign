@@ -4,41 +4,41 @@
    and should NOT be affected by fortyfour.css
    ============================================ */
 
-/* CSS Variables - Player Styling */
+/* CSS Variables - Player Styling (Desert Waveform Palette) */
 :root {
-  /* Primary Colors */
-  --player-primary: #3B82F6;
-  --player-primary-hover: #2563EB;
-  --player-primary-light: #DBEAFE;
+  /* Primary Colors - Warm Amber */
+  --player-primary: #c4956a;
+  --player-primary-hover: #a67d52;
+  --player-primary-light: rgba(196, 149, 106, 0.12);
 
-  /* Backgrounds */
-  --player-bg: #FFFFFF;
-  --player-bg-secondary: #F8FAFC;
-  --player-bg-tertiary: #F1F5F9;
+  /* Backgrounds - Sand Tones */
+  --player-bg: #faf8f5;
+  --player-bg-secondary: #f0ede8;
+  --player-bg-tertiary: #e8e4dd;
 
-  /* Text */
-  --player-text: #0F172A;
-  --player-text-secondary: #64748B;
-  --player-text-tertiary: #94A3B8;
+  /* Text - Warm Earth Tones */
+  --player-text: #2c2620;
+  --player-text-secondary: #8c8279;
+  --player-text-tertiary: #a69d94;
 
   /* Borders & Shadows */
-  --player-border: #E2E8F0;
+  --player-border: #d9d4cc;
   --player-border-width: 1px;
   --player-radius: 0.75rem;
   --player-radius-sm: 0.5rem;
   --player-radius-full: 9999px;
-  --player-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --player-shadow-lg: 0 10px 40px rgba(0,0,0,0.1), 0 2px 10px rgba(0,0,0,0.05);
+  --player-shadow: 0 1px 3px rgba(44, 38, 32, 0.08), 0 1px 2px rgba(44, 38, 32, 0.04);
+  --player-shadow-lg: 0 10px 40px rgba(44, 38, 32, 0.1), 0 2px 10px rgba(44, 38, 32, 0.05);
 
   /* Typography */
-  --player-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --player-font: system-ui, -apple-system, sans-serif;
 
-  /* Waveform */
+  /* Waveform - Amber Tones */
   --player-wave-active: var(--player-primary);
-  --player-wave-inactive: #CBD5E1;
+  --player-wave-inactive: #d9d4cc;
 
   /* Transcript */
-  --player-transcript-bg: #F1F5F9;
+  --player-transcript-bg: #f0ede8;
 
   /* Transitions */
   --player-transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -48,20 +48,40 @@
   --player-button-radius: 9999px;
 }
 
-/* Dark Theme Player Variables */
+/* Dark Theme Player Variables - Desert Night */
 [data-theme="dark"] {
-  --player-bg: #0F172A;
-  --player-bg-secondary: #1E293B;
-  --player-bg-tertiary: #334155;
-  --player-text: #F8FAFC;
-  --player-text-secondary: #94A3B8;
-  --player-text-tertiary: #64748B;
-  --player-border: #334155;
+  --player-bg: #1c1917;
+  --player-bg-secondary: #262220;
+  --player-bg-tertiary: #332e2a;
+  --player-text: #e7e0d5;
+  --player-text-secondary: #9c938a;
+  --player-text-tertiary: #6d655c;
+  --player-border: #3d3632;
   --player-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
   --player-shadow-lg: 0 10px 40px rgba(0,0,0,0.4), 0 2px 10px rgba(0,0,0,0.3);
-  --player-wave-inactive: #475569;
-  --player-primary-light: #1E3A5F;
-  --player-transcript-bg: #1E293B;
+  --player-wave-inactive: #4a433d;
+  --player-primary: #d4a574;
+  --player-primary-light: rgba(212, 165, 116, 0.15);
+  --player-transcript-bg: #262220;
+}
+
+/* System dark mode preference */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --player-bg: #1c1917;
+    --player-bg-secondary: #262220;
+    --player-bg-tertiary: #332e2a;
+    --player-text: #e7e0d5;
+    --player-text-secondary: #9c938a;
+    --player-text-tertiary: #6d655c;
+    --player-border: #3d3632;
+    --player-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --player-shadow-lg: 0 10px 40px rgba(0,0,0,0.4), 0 2px 10px rgba(0,0,0,0.3);
+    --player-wave-inactive: #4a433d;
+    --player-primary: #d4a574;
+    --player-primary-light: rgba(212, 165, 116, 0.15);
+    --player-transcript-bg: #262220;
+  }
 }
 
 /* ============================================

@@ -6,7 +6,7 @@ export const usePlayerStore = defineStore('player', {
     full: {
       showTranscript: false,
       showTranslation: false,
-      transcriptBg: '#F1F5F9',
+      transcriptBg: '#f0ede8',  // Sand subtle background
     },
 
     // Mini player specific options

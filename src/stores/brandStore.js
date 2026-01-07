@@ -2,41 +2,41 @@ import { defineStore } from 'pinia'
 
 export const useBrandStore = defineStore('brand', {
   state: () => ({
-    // Player container
-    playerBg: '#FFFFFF',
+    // Player container - Desert Waveform palette
+    playerBg: '#faf8f5',           // Sand background
     playerBgTransparent: false,
-    playerBorder: '#E2E8F0',
+    playerBorder: '#d9d4cc',        // Soft border
     playerBorderThickness: '1px',
-    playerShape: 'rounded', // 'pill' | 'rounded' | 'square' | 'custom'
+    playerShape: 'rounded',
     playerCustomRadius: 12,
-    playerPadding: 'normal', // 'tight' | 'normal' | 'spacious' | 'custom'
+    playerPadding: 'normal',
     playerCustomPadding: 1,
 
-    // Text colors
-    textColor: '#0F172A',
-    textSecondary: '#64748B',
-    labelColor: '#64748B',
-    linkColor: '#3B82F6',
-    linkHover: '#2563EB',
+    // Text colors - Warm earth tones
+    textColor: '#2c2620',           // Warm charcoal
+    textSecondary: '#8c8279',       // Muted text
+    labelColor: '#8c8279',
+    linkColor: '#c4956a',           // Warm amber
+    linkHover: '#a67d52',           // Darker amber
 
-    // Button styling
-    buttonColor: '#3B82F6',
+    // Button styling - Warm amber accent
+    buttonColor: '#c4956a',         // Warm amber
     buttonTransparent: false,
     iconColor: '#FFFFFF',
-    buttonBorderColor: '#3B82F6',
+    buttonBorderColor: '#c4956a',
     buttonBorderThickness: '0',
-    buttonShape: 'pill', // 'pill' | 'rounded' | 'square' | 'custom'
+    buttonShape: 'pill',
     buttonCustomRadius: 8,
 
     // Waveform & Timer
     showWaveform: true,
     showTimer: true,
-    timeFormat: 'elapsed-total', // 'elapsed-total' | 'elapsed' | 'remaining' | 'seconds' | 'mm-ss' | 'total-only'
-    waveformType: 'bars', // 'bars' | 'smooth' | 'dots' | 'line' | 'blob' | 'progress'
-    waveformThickness: 'normal', // 'thin' | 'normal' | 'thick' | 'custom'
+    timeFormat: 'elapsed-total',
+    waveformType: 'bars',
+    waveformThickness: 'normal',
     waveformCustomThickness: 4,
-    waveActive: '#3B82F6',
-    waveInactive: '#CBD5E1',
+    waveActive: '#c4956a',          // Warm amber
+    waveInactive: '#d9d4cc',        // Soft border color
   }),
 
   getters: {
