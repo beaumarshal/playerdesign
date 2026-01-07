@@ -5,6 +5,7 @@ import App from './App.vue'
 // Import styles
 import './assets/fortyfour.css'
 import './assets/players.css'
+import './assets/options.css'
 
 const app = createApp(App)
 const pinia = createPinia()

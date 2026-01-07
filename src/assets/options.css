@@ -1,0 +1,39 @@
+/**
+ * Shared styles for options panels
+ * Used by FullPlayerOptions, MiniPlayerOptions, PillPlayerOptions
+ */
+
+.options-panels {
+  padding: var(--ff-space-md);
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ff-space-md);
+  margin-bottom: var(--ff-space-md);
+}
+
+.control-row:last-child {
+  margin-bottom: 0;
+}
+
+.control-row--single {
+  grid-template-columns: 1fr;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--ff-space-xs);
+  font-size: 0.8125rem;
+  color: var(--ff-text);
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--ff-accent);
+  cursor: pointer;
+}

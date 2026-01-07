@@ -1,6 +1,13 @@
 <script setup>
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
+import {
+  shapeOptions,
+  thicknessOptions,
+  waveformOptions,
+  sizeOptions
+} from '@/composables/useOptionArrays'
+import OptionsGroup from '@/components/controls/OptionsGroup.vue'
 import ColorInput from '@/components/controls/ColorInput.vue'
 import SelectInput from '@/components/controls/SelectInput.vue'
 import RangeSlider from '@/components/controls/RangeSlider.vue'
@@ -8,52 +15,18 @@ import RangeSlider from '@/components/controls/RangeSlider.vue'
 const brandStore = useBrandStore()
 const playerStore = usePlayerStore()
 
-const sizeOptions = [
-  { value: 'xs', label: 'Extra Small (28px)' },
-  { value: 'sm', label: 'Small (36px)' },
-  { value: 'md', label: 'Medium (44px)' },
-  { value: 'lg', label: 'Large (56px)' },
-  { value: 'custom', label: 'Custom' },
-]
-
-const shapeOptions = [
-  { value: 'pill', label: 'Pill' },
-  { value: 'rounded', label: 'Rounded' },
-  { value: 'square', label: 'Square' },
-  { value: 'custom', label: 'Custom' },
-]
-
-const thicknessOptions = [
-  { value: '0', label: 'None' },
-  { value: '1px', label: '1px' },
-  { value: '2px', label: '2px' },
-  { value: '3px', label: '3px' },
-]
-
-const waveformOptions = [
-  { value: 'bars', label: 'Bars' },
-  { value: 'dots', label: 'Dots' },
-  { value: 'smooth', label: 'Smooth' },
-  { value: 'line', label: 'Line' },
-  { value: 'blob', label: 'Blob' },
-  { value: 'progress', label: 'Progress' },
-]
-
-const applyChanges = () => {
-  brandStore.applyCssVariables()
-}
+const applyChanges = () => brandStore.applyCssVariables()
 </script>
 
 <template>
   <div class="options-panels">
     <!-- Size -->
-    <div class="options-group">
-      <h4 class="options-group__title">Size</h4>
+    <OptionsGroup title="Size">
       <div class="control-row">
         <SelectInput
           v-model="playerStore.pill.size"
           label="Size"
-          :options="sizeOptions"
+          :options="sizeOptions.pill"
         />
       </div>
       <div class="control-row" v-if="playerStore.pill.size === 'custom'">
@@ -65,11 +38,10 @@ const applyChanges = () => {
           unit="px"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Player Style -->
-    <div class="options-group">
-      <h4 class="options-group__title">Player Style</h4>
+    <OptionsGroup title="Player Style">
       <div class="control-row">
         <ColorInput
           v-model="brandStore.playerBg"
@@ -96,11 +68,10 @@ const applyChanges = () => {
           :options="shapeOptions"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Text Colors -->
-    <div class="options-group">
-      <h4 class="options-group__title">Text Colors</h4>
+    <OptionsGroup title="Text Colors">
       <div class="control-row">
         <ColorInput
           v-model="brandStore.textColor"
@@ -113,11 +84,10 @@ const applyChanges = () => {
           @update:model-value="applyChanges"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Button Style -->
-    <div class="options-group">
-      <h4 class="options-group__title">Button Style</h4>
+    <OptionsGroup title="Button Style">
       <div class="control-row">
         <ColorInput
           v-model="brandStore.buttonColor"
@@ -139,11 +109,10 @@ const applyChanges = () => {
           :options="shapeOptions"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Waveform -->
-    <div class="options-group">
-      <h4 class="options-group__title">Waveform</h4>
+    <OptionsGroup title="Waveform">
       <div class="control-row">
         <label class="checkbox-label">
           <input type="checkbox" v-model="brandStore.showWaveform" />
@@ -173,56 +142,6 @@ const applyChanges = () => {
           @update:model-value="applyChanges"
         />
       </div>
-    </div>
+    </OptionsGroup>
   </div>
 </template>
-
-<style scoped>
-.options-group {
-  margin-bottom: var(--ff-space-lg);
-  padding-bottom: var(--ff-space-md);
-  border-bottom: 1px solid var(--ff-border);
-}
-
-.options-group:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.options-group__title {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ff-muted);
-  margin: 0 0 var(--ff-space-md);
-}
-
-.control-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--ff-space-md);
-  margin-bottom: var(--ff-space-md);
-}
-
-.control-row:last-child {
-  margin-bottom: 0;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: var(--ff-space-xs);
-  font-size: 0.8125rem;
-  color: var(--ff-text);
-  cursor: pointer;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--ff-accent);
-  cursor: pointer;
-}
-</style>

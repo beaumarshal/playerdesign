@@ -1,7 +1,15 @@
 <script setup>
-import { computed } from 'vue'
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
+import {
+  shapeOptions,
+  paddingOptions,
+  thicknessOptions,
+  waveformOptions,
+  waveThicknessOptions,
+  timeFormatOptions
+} from '@/composables/useOptionArrays'
+import OptionsGroup from '@/components/controls/OptionsGroup.vue'
 import ColorInput from '@/components/controls/ColorInput.vue'
 import SelectInput from '@/components/controls/SelectInput.vue'
 import RangeSlider from '@/components/controls/RangeSlider.vue'
@@ -9,63 +17,13 @@ import RangeSlider from '@/components/controls/RangeSlider.vue'
 const brandStore = useBrandStore()
 const playerStore = usePlayerStore()
 
-// Shape options
-const shapeOptions = [
-  { value: 'pill', label: 'Pill' },
-  { value: 'rounded', label: 'Rounded' },
-  { value: 'square', label: 'Square' },
-  { value: 'custom', label: 'Custom' },
-]
-
-const paddingOptions = [
-  { value: 'tight', label: 'Tight' },
-  { value: 'normal', label: 'Normal' },
-  { value: 'spacious', label: 'Spacious' },
-  { value: 'custom', label: 'Custom' },
-]
-
-const thicknessOptions = [
-  { value: '0', label: 'None' },
-  { value: '1px', label: '1px' },
-  { value: '2px', label: '2px' },
-  { value: '3px', label: '3px' },
-]
-
-const waveformOptions = [
-  { value: 'bars', label: 'Bars' },
-  { value: 'dots', label: 'Dots' },
-  { value: 'smooth', label: 'Smooth' },
-  { value: 'line', label: 'Line' },
-  { value: 'blob', label: 'Blob' },
-  { value: 'progress', label: 'Progress' },
-]
-
-const waveThicknessOptions = [
-  { value: 'thin', label: 'Thin' },
-  { value: 'normal', label: 'Normal' },
-  { value: 'thick', label: 'Thick' },
-]
-
-const timeFormatOptions = [
-  { value: 'elapsed-total', label: '0:00 / 1:00' },
-  { value: 'elapsed', label: '0:00' },
-  { value: 'remaining', label: '-1:00' },
-  { value: 'seconds', label: '0s' },
-  { value: 'mm-ss', label: '00:00' },
-  { value: 'total-only', label: '1:00' },
-]
-
-// Apply changes
-const applyChanges = () => {
-  brandStore.applyCssVariables()
-}
+const applyChanges = () => brandStore.applyCssVariables()
 </script>
 
 <template>
   <div class="options-panels">
     <!-- Player Style -->
-    <div class="options-group">
-      <h4 class="options-group__title">Player Style</h4>
+    <OptionsGroup title="Player Style">
       <div class="control-row">
         <ColorInput
           v-model="brandStore.playerBg"
@@ -118,11 +76,10 @@ const applyChanges = () => {
           unit="rem"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Text Colors -->
-    <div class="options-group">
-      <h4 class="options-group__title">Text Colors</h4>
+    <OptionsGroup title="Text Colors">
       <div class="control-row">
         <ColorInput
           v-model="brandStore.textColor"
@@ -135,11 +92,10 @@ const applyChanges = () => {
           @update:model-value="applyChanges"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Button Style -->
-    <div class="options-group">
-      <h4 class="options-group__title">Button Style</h4>
+    <OptionsGroup title="Button Style">
       <div class="control-row">
         <ColorInput
           v-model="brandStore.buttonColor"
@@ -175,11 +131,10 @@ const applyChanges = () => {
           unit="px"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Waveform & Timer -->
-    <div class="options-group">
-      <h4 class="options-group__title">Waveform & Timer</h4>
+    <OptionsGroup title="Waveform & Timer">
       <div class="control-row">
         <label class="checkbox-label">
           <input type="checkbox" v-model="brandStore.showWaveform" />
@@ -221,11 +176,10 @@ const applyChanges = () => {
           :options="timeFormatOptions"
         />
       </div>
-    </div>
+    </OptionsGroup>
 
     <!-- Transcript -->
-    <div class="options-group">
-      <h4 class="options-group__title">Transcript</h4>
+    <OptionsGroup title="Transcript">
       <div class="control-row">
         <label class="checkbox-label">
           <input type="checkbox" v-model="playerStore.full.showTranscript" />
@@ -242,56 +196,6 @@ const applyChanges = () => {
           label="Transcript Background"
         />
       </div>
-    </div>
+    </OptionsGroup>
   </div>
 </template>
-
-<style scoped>
-.options-group {
-  margin-bottom: var(--ff-space-lg);
-  padding-bottom: var(--ff-space-md);
-  border-bottom: 1px solid var(--ff-border);
-}
-
-.options-group:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.options-group__title {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ff-muted);
-  margin: 0 0 var(--ff-space-md);
-}
-
-.control-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--ff-space-md);
-  margin-bottom: var(--ff-space-md);
-}
-
-.control-row:last-child {
-  margin-bottom: 0;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: var(--ff-space-xs);
-  font-size: 0.8125rem;
-  color: var(--ff-text);
-  cursor: pointer;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--ff-accent);
-  cursor: pointer;
-}
-</style>
