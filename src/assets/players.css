@@ -136,6 +136,7 @@
   min-width: 0;
   overflow: hidden;
   cursor: pointer;
+  justify-content: space-between;
 }
 
 .player-full__wave-bar {
@@ -155,6 +156,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
+  justify-content: space-between;
 }
 
 /* Waveform - Dots */

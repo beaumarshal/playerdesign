@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
 
@@ -9,17 +9,46 @@ const playerStore = usePlayerStore()
 const waveformRef = ref(null)
 const bars = ref([])
 
-// Generate random bar heights
+// Generate random bar heights based on container width
 const generateBars = () => {
-  const count = 50
-  bars.value = Array.from({ length: count }, () =>
+  if (!waveformRef.value) {
+    // Fallback if ref not ready
+    bars.value = Array.from({ length: 80 }, () => Math.random() * 20 + 4)
+    return
+  }
+
+  const containerWidth = waveformRef.value.clientWidth
+  const barWidth = brandStore.waveThickness || 4
+  const gap = 2
+  const count = Math.floor(containerWidth / (barWidth + gap))
+
+  bars.value = Array.from({ length: Math.max(count, 20) }, () =>
     Math.random() * 20 + 4
   )
 }
 
-onMounted(() => {
-  generateBars()
+// Handle resize
+let resizeObserver = null
+
+onMounted(async () => {
   brandStore.applyCssVariables()
+
+  await nextTick()
+  generateBars()
+
+  // Watch for container resize
+  if (waveformRef.value && window.ResizeObserver) {
+    resizeObserver = new ResizeObserver(() => {
+      generateBars()
+    })
+    resizeObserver.observe(waveformRef.value)
+  }
+})
+
+onUnmounted(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+  }
 })
 
 // Computed styles
