@@ -1,11 +1,11 @@
 <script setup>
+import { computed } from 'vue'
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
 import {
   shapeOptions,
   thicknessOptions,
   sizeOptions,
-  positionOptions,
   animationOptions
 } from '@/composables/useOptionArrays'
 import OptionsGroup from '@/components/controls/OptionsGroup.vue'
@@ -18,6 +18,7 @@ const brandStore = useBrandStore()
 const playerStore = usePlayerStore()
 
 const applyChanges = () => brandStore.applyCssVariables()
+const isLightMode = computed(() => brandStore.previewMode === 'light')
 </script>
 
 <template>
@@ -25,18 +26,22 @@ const applyChanges = () => brandStore.applyCssVariables()
     <!-- Theme Selector -->
     <ThemeSelector />
 
-    <!-- Size & Position -->
-    <OptionsGroup title="Size & Position">
+    <!-- Size -->
+    <OptionsGroup title="Size">
       <div class="control-row">
         <SelectInput
           v-model="playerStore.mini.size"
           label="Size"
           :options="sizeOptions.mini"
         />
-        <SelectInput
-          v-model="playerStore.mini.position"
-          label="Position"
-          :options="positionOptions"
+      </div>
+      <div class="control-row" v-if="playerStore.mini.size === 'custom'">
+        <RangeSlider
+          v-model="playerStore.mini.customSize"
+          label="Custom Size"
+          :min="24"
+          :max="120"
+          unit="px"
         />
       </div>
     </OptionsGroup>
@@ -52,22 +57,8 @@ const applyChanges = () => brandStore.applyCssVariables()
       </div>
     </OptionsGroup>
 
-    <!-- Button Style -->
-    <OptionsGroup title="Button Style">
-      <div class="control-row">
-        <ColorInput
-          v-model="brandStore.buttonColor"
-          label="Button Color"
-          :transparent-option="true"
-          v-model:is-transparent="brandStore.buttonTransparent"
-          @update:model-value="applyChanges"
-        />
-        <ColorInput
-          v-model="brandStore.iconColor"
-          label="Icon Color"
-          @update:model-value="applyChanges"
-        />
-      </div>
+    <!-- Button Layout -->
+    <OptionsGroup title="Button Layout">
       <div class="control-row">
         <SelectInput
           v-model="brandStore.buttonShape"
@@ -89,10 +80,37 @@ const applyChanges = () => brandStore.applyCssVariables()
           unit="px"
         />
       </div>
-      <div class="control-row" v-if="brandStore.buttonBorderThickness !== '0'">
+    </OptionsGroup>
+
+    <!-- Light Mode Colors -->
+    <OptionsGroup title="Light Mode Colors" :badge="isLightMode ? 'Active' : ''">
+      <div class="control-row">
         <ColorInput
-          v-model="brandStore.buttonBorderColor"
-          label="Border Color"
+          v-model="brandStore.light.buttonColor"
+          label="Button"
+          :transparent-option="true"
+          v-model:is-transparent="brandStore.buttonTransparent"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.light.iconColor"
+          label="Icon"
+          @update:model-value="applyChanges"
+        />
+      </div>
+    </OptionsGroup>
+
+    <!-- Dark Mode Colors -->
+    <OptionsGroup title="Dark Mode Colors" :badge="!isLightMode ? 'Active' : ''">
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.dark.buttonColor"
+          label="Button"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.dark.iconColor"
+          label="Icon"
           @update:model-value="applyChanges"
         />
       </div>

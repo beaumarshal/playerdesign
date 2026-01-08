@@ -1,10 +1,32 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
+import { usePlayback } from '@/composables/usePlayback'
 
 const brandStore = useBrandStore()
 const playerStore = usePlayerStore()
+const { togglePlayback, duration } = usePlayback()
+
+// Extract reactive refs from store
+const {
+  buttonColor,
+  iconColor,
+  buttonRadius,
+  buttonTransparent,
+  playerRadius,
+  waveformType,
+  waveThickness,
+  showWaveform,
+  showTimer,
+  previewMode
+} = storeToRefs(brandStore)
+
+// Re-apply CSS variables when preview mode changes
+watch(previewMode, () => {
+  brandStore.applyCssVariables()
+})
 
 const bars = ref([])
 
@@ -26,7 +48,7 @@ const pillStyle = computed(() => {
     height: styles.height,
     padding: styles.padding,
     gap: styles.gap,
-    borderRadius: brandStore.playerRadius,
+    borderRadius: playerRadius.value,
   }
 })
 
@@ -35,8 +57,8 @@ const buttonStyle = computed(() => {
   return {
     width: styles.btnSize,
     height: styles.btnSize,
-    borderRadius: brandStore.buttonRadius,
-    background: brandStore.buttonTransparent ? 'transparent' : brandStore.buttonColor,
+    borderRadius: buttonRadius.value,
+    background: buttonTransparent.value ? 'transparent' : buttonColor.value,
   }
 })
 
@@ -45,13 +67,13 @@ const timerStyle = computed(() => ({
 }))
 
 const iconStyle = computed(() => ({
-  color: brandStore.iconColor,
+  color: iconColor.value,
 }))
 
 // Waveform class based on type
 const waveformClass = computed(() => [
   'player-pill__waveform',
-  `player-full__waveform--${brandStore.waveformType}`
+  `player-full__waveform--${waveformType.value}`
 ])
 
 // SVG path for smooth waveform (using quadratic curves for smoothness)
@@ -157,21 +179,33 @@ const blobPath = computed(() => {
   return path
 })
 
-// Progress percentage (mock for preview)
-const progress = computed(() => 30)
+// Progress percentage from store (0-100)
+const progress = computed(() => playerStore.progress * 100)
+
+// Format time as m:ss
+const formatTime = (seconds) => {
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
+
+// Current and total time display
+const currentTime = computed(() => formatTime(playerStore.progress * duration))
+const totalTime = computed(() => formatTime(duration))
 </script>
 
 <template>
-  <div class="player-pill" :style="pillStyle">
-    <button class="player-pill__play" :style="buttonStyle">
-      <i class="fa-solid fa-play player-pill__play-icon" :style="iconStyle"></i>
+  <div class="player-pill" :class="{ 'is-playing': playerStore.isPlaying }" :style="pillStyle">
+    <button class="player-pill__play" :style="buttonStyle" @click="togglePlayback">
+      <i v-if="!playerStore.isPlaying" class="fa-solid fa-play player-pill__play-icon" :style="iconStyle"></i>
+      <i v-else class="fa-solid fa-pause player-pill__play-icon" :style="iconStyle"></i>
     </button>
 
     <!-- Waveform container -->
-    <div :class="waveformClass" v-if="brandStore.showWaveform">
+    <div :class="waveformClass" v-if="showWaveform">
 
       <!-- Bars Waveform -->
-      <template v-if="brandStore.waveformType === 'bars'">
+      <template v-if="waveformType === 'bars'">
         <div
           v-for="(height, index) in bars"
           :key="index"
@@ -182,7 +216,7 @@ const progress = computed(() => 30)
       </template>
 
       <!-- Dots Waveform -->
-      <template v-else-if="brandStore.waveformType === 'dots'">
+      <template v-else-if="waveformType === 'dots'">
         <div
           v-for="(height, index) in bars"
           :key="index"
@@ -192,39 +226,39 @@ const progress = computed(() => 30)
       </template>
 
       <!-- Smooth Waveform (SVG) -->
-      <template v-else-if="brandStore.waveformType === 'smooth'">
+      <template v-else-if="waveformType === 'smooth'">
         <svg viewBox="0 0 200 32" preserveAspectRatio="none" class="waveform-svg">
           <path
             class="waveform-smooth-bg"
             :d="smoothPath"
-            :style="{ strokeWidth: brandStore.waveThickness }"
+            :style="{ strokeWidth: waveThickness }"
           />
           <path
             class="waveform-smooth-fill"
             :d="smoothPath"
-            :style="{ strokeWidth: brandStore.waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
+            :style="{ strokeWidth: waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
           />
         </svg>
       </template>
 
       <!-- Line Waveform (SVG) -->
-      <template v-else-if="brandStore.waveformType === 'line'">
+      <template v-else-if="waveformType === 'line'">
         <svg viewBox="0 0 200 32" preserveAspectRatio="none" class="waveform-svg">
           <path
             class="waveform-line-bg"
             :d="linePath"
-            :style="{ strokeWidth: brandStore.waveThickness }"
+            :style="{ strokeWidth: waveThickness }"
           />
           <path
             class="waveform-line-fill"
             :d="linePath"
-            :style="{ strokeWidth: brandStore.waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
+            :style="{ strokeWidth: waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
           />
         </svg>
       </template>
 
       <!-- Blob Waveform (SVG) -->
-      <template v-else-if="brandStore.waveformType === 'blob'">
+      <template v-else-if="waveformType === 'blob'">
         <svg viewBox="0 0 200 32" preserveAspectRatio="none" class="waveform-svg">
           <defs>
             <clipPath id="blob-progress-pill">
@@ -237,21 +271,21 @@ const progress = computed(() => 30)
       </template>
 
       <!-- Progress Bar Waveform -->
-      <template v-else-if="brandStore.waveformType === 'progress'">
+      <template v-else-if="waveformType === 'progress'">
         <div
           class="waveform-progress-track"
-          :style="{ height: brandStore.waveThickness + 'px', borderRadius: (brandStore.waveThickness / 2) + 'px' }"
+          :style="{ height: waveThickness + 'px', borderRadius: (waveThickness / 2) + 'px' }"
         >
           <div
             class="waveform-progress-fill"
-            :style="{ width: progress + '%', borderRadius: (brandStore.waveThickness / 2) + 'px' }"
+            :style="{ width: progress + '%', borderRadius: (waveThickness / 2) + 'px' }"
           ></div>
         </div>
       </template>
     </div>
 
-    <span class="player-pill__timer" v-if="brandStore.showTimer" :style="timerStyle">
-      0:00 / 1:24
+    <span class="player-pill__timer" v-if="showTimer" :style="timerStyle">
+      {{ currentTime }} / {{ totalTime }}
     </span>
   </div>
 </template>

@@ -1,15 +1,32 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
 import { useWaveform } from '@/composables/useWaveform'
+import { usePlayback } from '@/composables/usePlayback'
 
 const brandStore = useBrandStore()
 const playerStore = usePlayerStore()
+const { togglePlayback, duration } = usePlayback()
+
+// Extract reactive refs from store for better reactivity
+const {
+  buttonColor,
+  iconColor,
+  buttonRadius,
+  buttonTransparent,
+  waveThickness,
+  previewMode,
+  waveformType,
+  showWaveform,
+  showTimer,
+  playerRadius
+} = storeToRefs(brandStore)
 
 // Use waveform composable for bar/dot generation
 const { waveformRef, bars } = useWaveform({
-  barWidth: brandStore.waveThickness || 4,
+  barWidth: waveThickness.value || 4,
   gap: 2,
   minBars: 20,
   minHeight: 4,
@@ -20,20 +37,25 @@ onMounted(() => {
   brandStore.applyCssVariables()
 })
 
-// Computed styles
+// Re-apply CSS variables when preview mode changes
+watch(previewMode, () => {
+  brandStore.applyCssVariables()
+})
+
+// Computed styles using reactive refs
 const buttonStyle = computed(() => ({
-  borderRadius: brandStore.buttonRadius,
-  background: brandStore.buttonTransparent ? 'transparent' : brandStore.buttonColor,
+  borderRadius: buttonRadius.value,
+  background: buttonTransparent.value ? 'transparent' : buttonColor.value,
 }))
 
 const iconStyle = computed(() => ({
-  color: brandStore.iconColor,
+  color: iconColor.value,
 }))
 
 // Waveform class based on type
 const waveformClass = computed(() => [
   'player-full__waveform',
-  `player-full__waveform--${brandStore.waveformType}`
+  `player-full__waveform--${waveformType.value}`
 ])
 
 // SVG path for smooth waveform (using quadratic curves for smoothness)
@@ -139,23 +161,35 @@ const blobPath = computed(() => {
   return path
 })
 
-// Progress percentage (mock for preview)
-const progress = computed(() => 30)
+// Progress percentage from store (0-100)
+const progress = computed(() => playerStore.progress * 100)
+
+// Format time as m:ss
+const formatTime = (seconds) => {
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
+
+// Current and total time display
+const currentTime = computed(() => formatTime(playerStore.progress * duration))
+const totalTime = computed(() => formatTime(duration))
 </script>
 
 <template>
-  <div class="player-full" :style="{ borderRadius: brandStore.playerRadius }">
+  <div class="player-full" :class="{ 'is-playing': playerStore.isPlaying }" :style="{ borderRadius: playerRadius }">
     <div class="player-full__main" :style="{ padding: brandStore.playerPaddingValue }">
       <div class="player-full__controls">
-        <button class="player-full__play" :style="buttonStyle">
-          <i class="fa-solid fa-play player-full__play-icon" :style="iconStyle"></i>
+        <button class="player-full__play" :style="buttonStyle" @click="togglePlayback">
+          <i v-if="!playerStore.isPlaying" class="fa-solid fa-play player-full__play-icon" :style="iconStyle"></i>
+          <i v-else class="fa-solid fa-pause player-full__play-icon" :style="iconStyle"></i>
         </button>
 
         <!-- Waveform container -->
-        <div ref="waveformRef" :class="waveformClass" v-if="brandStore.showWaveform">
+        <div ref="waveformRef" :class="waveformClass" v-if="showWaveform">
 
           <!-- Bars Waveform -->
-          <template v-if="brandStore.waveformType === 'bars'">
+          <template v-if="waveformType === 'bars'">
             <div
               v-for="(height, index) in bars"
               :key="index"
@@ -163,59 +197,59 @@ const progress = computed(() => 30)
               :class="{ 'is-active': (index / bars.length) * 100 < progress }"
               :style="{
                 height: height + 'px',
-                width: brandStore.waveThickness + 'px'
+                width: waveThickness + 'px'
               }"
             ></div>
           </template>
 
           <!-- Dots Waveform -->
-          <template v-else-if="brandStore.waveformType === 'dots'">
+          <template v-else-if="waveformType === 'dots'">
             <div
               v-for="(height, index) in bars"
               :key="index"
               class="player-full__wave-dot"
               :class="{ 'is-active': (index / bars.length) * 100 < progress }"
               :style="{
-                width: (brandStore.waveThickness + 2) + 'px',
-                height: (brandStore.waveThickness + 2) + 'px'
+                width: (waveThickness + 2) + 'px',
+                height: (waveThickness + 2) + 'px'
               }"
             ></div>
           </template>
 
           <!-- Smooth Waveform (SVG) -->
-          <template v-else-if="brandStore.waveformType === 'smooth'">
+          <template v-else-if="waveformType === 'smooth'">
             <svg viewBox="0 0 200 32" preserveAspectRatio="none" class="waveform-svg">
               <path
                 class="waveform-smooth-bg"
                 :d="smoothPath"
-                :style="{ strokeWidth: brandStore.waveThickness }"
+                :style="{ strokeWidth: waveThickness }"
               />
               <path
                 class="waveform-smooth-fill"
                 :d="smoothPath"
-                :style="{ strokeWidth: brandStore.waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
+                :style="{ strokeWidth: waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
               />
             </svg>
           </template>
 
           <!-- Line Waveform (SVG) -->
-          <template v-else-if="brandStore.waveformType === 'line'">
+          <template v-else-if="waveformType === 'line'">
             <svg viewBox="0 0 200 32" preserveAspectRatio="none" class="waveform-svg">
               <path
                 class="waveform-line-bg"
                 :d="linePath"
-                :style="{ strokeWidth: brandStore.waveThickness }"
+                :style="{ strokeWidth: waveThickness }"
               />
               <path
                 class="waveform-line-fill"
                 :d="linePath"
-                :style="{ strokeWidth: brandStore.waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
+                :style="{ strokeWidth: waveThickness, strokeDasharray: '1000', strokeDashoffset: 1000 - (progress * 10) }"
               />
             </svg>
           </template>
 
           <!-- Blob Waveform (SVG) -->
-          <template v-else-if="brandStore.waveformType === 'blob'">
+          <template v-else-if="waveformType === 'blob'">
             <svg viewBox="0 0 200 32" preserveAspectRatio="none" class="waveform-svg">
               <defs>
                 <clipPath id="blob-progress-full">
@@ -228,23 +262,23 @@ const progress = computed(() => 30)
           </template>
 
           <!-- Progress Bar Waveform -->
-          <template v-else-if="brandStore.waveformType === 'progress'">
+          <template v-else-if="waveformType === 'progress'">
             <div
               class="waveform-progress-track"
-              :style="{ height: brandStore.waveThickness + 'px', borderRadius: (brandStore.waveThickness / 2) + 'px' }"
+              :style="{ height: waveThickness + 'px', borderRadius: (waveThickness / 2) + 'px' }"
             >
               <div
                 class="waveform-progress-fill"
-                :style="{ width: progress + '%', borderRadius: (brandStore.waveThickness / 2) + 'px' }"
+                :style="{ width: progress + '%', borderRadius: (waveThickness / 2) + 'px' }"
               ></div>
             </div>
           </template>
         </div>
 
-        <span class="player-full__timer" v-if="brandStore.showTimer">
-          <span class="player-full__timer-current">0:00</span>
+        <span class="player-full__timer" v-if="showTimer">
+          <span class="player-full__timer-current">{{ currentTime }}</span>
           <span>/</span>
-          <span>2:34</span>
+          <span>{{ totalTime }}</span>
         </span>
       </div>
     </div>

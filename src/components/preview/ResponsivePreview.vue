@@ -3,12 +3,21 @@ import { ref, computed } from 'vue'
 import { useBuilderStore } from '@/stores/builderStore'
 import BreakpointRuler from './BreakpointRuler.vue'
 
+const props = defineProps({
+  darkMode: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const builderStore = useBuilderStore()
 
 const isDragging = ref(false)
 
 const containerStyle = computed(() => ({
-  width: `${builderStore.previewWidth}px`
+  width: `${builderStore.previewWidth}px`,
+  background: props.darkMode ? '#121212' : '#f5f5f5',
+  borderColor: props.darkMode ? '#2a2a2a' : 'var(--ff-border)'
 }))
 
 const startDrag = (e) => {
@@ -46,7 +55,13 @@ const setBreakpoint = (width) => {
         <div class="responsive-preview__content">
           <slot></slot>
         </div>
-        <div class="responsive-preview__width-display">
+        <div
+          class="responsive-preview__width-display"
+          :style="{
+            background: darkMode ? '#2a2a2a' : 'var(--ff-bg)',
+            color: darkMode ? '#999' : 'var(--ff-muted)'
+          }"
+        >
           {{ builderStore.previewWidth }}px
         </div>
       </div>

@@ -371,6 +371,7 @@
   transition: all var(--player-transition);
   background: var(--player-primary);
   border-radius: var(--player-button-radius);
+  overflow: visible;
 }
 
 .player-mini:hover {

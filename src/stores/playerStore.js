@@ -11,8 +11,8 @@ export const usePlayerStore = defineStore('player', {
 
     // Mini player specific options
     mini: {
-      size: 'md', // 'sm' | 'md' | 'lg'
-      position: 'center', // 'center' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+      size: 'md', // 'sm' | 'md' | 'lg' | 'custom'
+      customSize: 56, // Custom size in pixels
       animation: 'circular', // 'none' | 'circular' | 'pulse' | 'rings'
     },
 
@@ -28,11 +28,23 @@ export const usePlayerStore = defineStore('player', {
   }),
 
   getters: {
-    // Mini player size classes
-    miniSizeClass: (state) => `player-mini--${state.mini.size}`,
+    // Mini player size styles
+    miniStyles: (state) => {
+      const presets = {
+        sm: 40,
+        md: 56,
+        lg: 72,
+      }
 
-    // Mini player position class
-    miniPositionClass: (state) => `player-mini--${state.mini.position}`,
+      const size = state.mini.size === 'custom'
+        ? state.mini.customSize
+        : (presets[state.mini.size] || presets.md)
+
+      return {
+        width: `${size}px`,
+        height: `${size}px`,
+      }
+    },
 
     // Mini player animation class
     miniAnimationClass: (state) => {

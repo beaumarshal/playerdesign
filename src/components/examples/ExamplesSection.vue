@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useBuilderStore } from '@/stores/builderStore'
 import ExampleCard from './ExampleCard.vue'
+import DocumentationExamples from './DocumentationExamples.vue'
+import InspirationGallery from './InspirationGallery.vue'
 
 const builderStore = useBuilderStore()
 
@@ -158,17 +160,26 @@ const currentExamples = computed(() => {
 
 <template>
   <div class="examples-section">
-    <h3 class="examples-title">Use Case Examples</h3>
-    <div class="examples-grid">
-      <ExampleCard
-        v-for="item in currentExamples"
-        :key="item.label"
-        :label="item.label"
-        :description="item.description"
-        :player-type="activePlayerType"
-        :example="item.example"
-      />
-    </div>
+    <!-- Mini Player: Documentation Examples + Inspiration Gallery -->
+    <template v-if="activePlayerType === 'mini'">
+      <DocumentationExamples />
+      <InspirationGallery />
+    </template>
+
+    <!-- Full and Pill use grid layout -->
+    <template v-else>
+      <h3 class="examples-title">Use Case Examples</h3>
+      <div class="examples-grid">
+        <ExampleCard
+          v-for="item in currentExamples"
+          :key="item.label"
+          :label="item.label"
+          :description="item.description"
+          :player-type="activePlayerType"
+          :example="item.example"
+        />
+      </div>
+    </template>
   </div>
 </template>
 

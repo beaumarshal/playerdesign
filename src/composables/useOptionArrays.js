@@ -53,6 +53,7 @@ export const sizeOptions = {
     { value: 'sm', label: 'Small (40px)' },
     { value: 'md', label: 'Medium (56px)' },
     { value: 'lg', label: 'Large (72px)' },
+    { value: 'custom', label: 'Custom' },
   ],
   pill: [
     { value: 'xs', label: 'Extra Small (28px)' },
@@ -72,6 +73,7 @@ export const positionOptions = [
 
 export const animationOptions = [
   { value: 'none', label: 'None' },
+  { value: 'circular', label: 'Progress Ring' },
   { value: 'pulse', label: 'Pulse' },
   { value: 'rings', label: 'Rings' },
 ]

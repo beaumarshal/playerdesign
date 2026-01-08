@@ -26,7 +26,7 @@ const handleThemeChange = (event) => {
         {{ theme.label }}
       </option>
     </select>
-    <p class="theme-selector__hint">Choose a preset, then customize below</p>
+    <p class="theme-selector__hint">Choose a preset, then customize colors below</p>
   </div>
 </template>
 

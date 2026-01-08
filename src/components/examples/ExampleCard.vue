@@ -232,7 +232,7 @@ const props = defineProps({
 .example-card__preview {
   background: var(--ff-bg-subtle);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .example-card__description {
@@ -245,6 +245,7 @@ const props = defineProps({
 .example-article__header {
   height: 100px;
   overflow: hidden;
+  border-radius: 8px 8px 0 0;
 }
 
 .example-article__image {
@@ -410,6 +411,7 @@ const props = defineProps({
 /* Artwork Example (Mini) */
 .example-artwork {
   position: relative;
+  overflow: visible;
 }
 
 .example-artwork__image {
@@ -417,6 +419,7 @@ const props = defineProps({
   height: 140px;
   object-fit: cover;
   display: block;
+  border-radius: 8px 8px 0 0;
 }
 
 .example-artwork__overlay {
@@ -426,6 +429,8 @@ const props = defineProps({
   align-items: center;
   justify-content: center;
   background: rgba(0,0,0,0.3);
+  overflow: visible;
+  border-radius: 8px 8px 0 0;
 }
 
 .example-artwork__caption {
@@ -450,6 +455,7 @@ const props = defineProps({
   display: flex;
   gap: var(--ff-space-md);
   padding: var(--ff-space-md);
+  overflow: visible;
 }
 
 .example-product__image-wrap {
@@ -457,6 +463,7 @@ const props = defineProps({
   width: 80px;
   height: 80px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .example-product__image {
@@ -506,12 +513,13 @@ const props = defineProps({
 /* Profile Example (Mini) */
 .example-profile {
   text-align: center;
+  overflow: visible;
 }
 
 .example-profile__cover {
   position: relative;
   height: 60px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .example-profile__cover-img {
@@ -568,6 +576,7 @@ const props = defineProps({
   display: flex;
   gap: var(--ff-space-md);
   padding: var(--ff-space-md);
+  overflow: visible;
 }
 
 .example-guide__image-wrap {
@@ -575,6 +584,7 @@ const props = defineProps({
   width: 100px;
   height: 75px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .example-guide__image {

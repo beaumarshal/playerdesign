@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useBrandStore } from '@/stores/brandStore'
 import { usePlayerStore } from '@/stores/playerStore'
 import {
@@ -17,6 +18,7 @@ const brandStore = useBrandStore()
 const playerStore = usePlayerStore()
 
 const applyChanges = () => brandStore.applyCssVariables()
+const isLightMode = computed(() => brandStore.previewMode === 'light')
 </script>
 
 <template>
@@ -44,22 +46,8 @@ const applyChanges = () => brandStore.applyCssVariables()
       </div>
     </OptionsGroup>
 
-    <!-- Player Style -->
-    <OptionsGroup title="Player Style">
-      <div class="control-row">
-        <ColorInput
-          v-model="brandStore.playerBg"
-          label="Background"
-          :transparent-option="true"
-          v-model:is-transparent="brandStore.playerBgTransparent"
-          @update:model-value="applyChanges"
-        />
-        <ColorInput
-          v-model="brandStore.playerBorder"
-          label="Border"
-          @update:model-value="applyChanges"
-        />
-      </div>
+    <!-- Player Layout -->
+    <OptionsGroup title="Player Layout">
       <div class="control-row">
         <SelectInput
           v-model="brandStore.playerBorderThickness"
@@ -72,40 +60,6 @@ const applyChanges = () => brandStore.applyCssVariables()
           :options="shapeOptions"
         />
       </div>
-    </OptionsGroup>
-
-    <!-- Text Colors -->
-    <OptionsGroup title="Text Colors">
-      <div class="control-row">
-        <ColorInput
-          v-model="brandStore.textColor"
-          label="Primary Text"
-          @update:model-value="applyChanges"
-        />
-        <ColorInput
-          v-model="brandStore.textSecondary"
-          label="Secondary Text"
-          @update:model-value="applyChanges"
-        />
-      </div>
-    </OptionsGroup>
-
-    <!-- Button Style -->
-    <OptionsGroup title="Button Style">
-      <div class="control-row">
-        <ColorInput
-          v-model="brandStore.buttonColor"
-          label="Button Color"
-          :transparent-option="true"
-          v-model:is-transparent="brandStore.buttonTransparent"
-          @update:model-value="applyChanges"
-        />
-        <ColorInput
-          v-model="brandStore.iconColor"
-          label="Icon Color"
-          @update:model-value="applyChanges"
-        />
-      </div>
       <div class="control-row">
         <SelectInput
           v-model="brandStore.buttonShape"
@@ -115,7 +69,7 @@ const applyChanges = () => brandStore.applyCssVariables()
       </div>
     </OptionsGroup>
 
-    <!-- Waveform -->
+    <!-- Waveform Settings -->
     <OptionsGroup title="Waveform">
       <div class="control-row">
         <label class="checkbox-label">
@@ -134,15 +88,109 @@ const applyChanges = () => brandStore.applyCssVariables()
           :options="waveformOptions"
         />
       </div>
+    </OptionsGroup>
+
+    <!-- Light Mode Colors -->
+    <OptionsGroup title="Light Mode Colors" :badge="isLightMode ? 'Active' : ''">
       <div class="control-row">
         <ColorInput
-          v-model="brandStore.waveActive"
-          label="Active Color"
+          v-model="brandStore.light.playerBg"
+          label="Background"
+          :transparent-option="true"
+          v-model:is-transparent="brandStore.playerBgTransparent"
           @update:model-value="applyChanges"
         />
         <ColorInput
-          v-model="brandStore.waveInactive"
-          label="Inactive Color"
+          v-model="brandStore.light.playerBorder"
+          label="Border"
+          @update:model-value="applyChanges"
+        />
+      </div>
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.light.textColor"
+          label="Primary Text"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.light.textSecondary"
+          label="Secondary Text"
+          @update:model-value="applyChanges"
+        />
+      </div>
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.light.buttonColor"
+          label="Button"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.light.iconColor"
+          label="Icon"
+          @update:model-value="applyChanges"
+        />
+      </div>
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.light.waveActive"
+          label="Wave Active"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.light.waveInactive"
+          label="Wave Inactive"
+          @update:model-value="applyChanges"
+        />
+      </div>
+    </OptionsGroup>
+
+    <!-- Dark Mode Colors -->
+    <OptionsGroup title="Dark Mode Colors" :badge="!isLightMode ? 'Active' : ''">
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.dark.playerBg"
+          label="Background"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.dark.playerBorder"
+          label="Border"
+          @update:model-value="applyChanges"
+        />
+      </div>
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.dark.textColor"
+          label="Primary Text"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.dark.textSecondary"
+          label="Secondary Text"
+          @update:model-value="applyChanges"
+        />
+      </div>
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.dark.buttonColor"
+          label="Button"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.dark.iconColor"
+          label="Icon"
+          @update:model-value="applyChanges"
+        />
+      </div>
+      <div class="control-row">
+        <ColorInput
+          v-model="brandStore.dark.waveActive"
+          label="Wave Active"
+          @update:model-value="applyChanges"
+        />
+        <ColorInput
+          v-model="brandStore.dark.waveInactive"
+          label="Wave Inactive"
           @update:model-value="applyChanges"
         />
       </div>
