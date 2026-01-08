@@ -6,6 +6,7 @@ import GettingStarted from '@/components/docs/GettingStarted.vue'
 import MiniCssVariables from '@/components/docs/MiniCssVariables.vue'
 import MiniAttributes from '@/components/docs/MiniAttributes.vue'
 import MiniSlots from '@/components/docs/MiniSlots.vue'
+import MiniExamples from '@/components/docs/MiniExamples.vue'
 import InspirationGallery from '@/components/examples/InspirationGallery.vue'
 import ComingSoon from '@/components/docs/ComingSoon.vue'
 
@@ -27,6 +28,7 @@ const sections = [
           { id: 'mini-styling', label: 'Styling' },
           { id: 'mini-attributes', label: 'Attributes' },
           { id: 'mini-slots', label: 'Slots' },
+          { id: 'mini-examples', label: 'Examples' },
           { id: 'mini-inspiration', label: 'Inspiration' },
           { id: 'mini-playground', label: 'Playground' },
         ]
@@ -96,6 +98,15 @@ const flatSections = flattenSections(sections)
       title="Slots"
     >
       <MiniSlots />
+    </DocsSection>
+
+    <!-- Mini Player - Examples -->
+    <DocsSection
+      id="mini-examples"
+      title="Examples"
+      description="Complete code examples combining variables, attributes, and slots"
+    >
+      <MiniExamples />
     </DocsSection>
 
     <!-- Mini Player - Inspiration -->
