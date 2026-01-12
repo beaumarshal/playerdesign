@@ -7,6 +7,7 @@ import MiniCssVariables from '@/components/docs/MiniCssVariables.vue'
 import MiniAttributes from '@/components/docs/MiniAttributes.vue'
 import MiniSlots from '@/components/docs/MiniSlots.vue'
 import MiniExamples from '@/components/docs/MiniExamples.vue'
+import PillExamples from '@/components/docs/PillExamples.vue'
 import InspirationGallery from '@/components/examples/InspirationGallery.vue'
 import ComingSoon from '@/components/docs/ComingSoon.vue'
 
@@ -33,7 +34,13 @@ const sections = [
           { id: 'mini-playground', label: 'Playground' },
         ]
       },
-      { id: 'pill-player', label: 'Pill', badge: 'Soon' },
+      {
+        id: 'pill-player',
+        label: 'Pill',
+        children: [
+          { id: 'pill-examples', label: 'Examples' },
+        ]
+      },
     ]
   },
 ]
@@ -127,12 +134,26 @@ const flatSections = flattenSections(sections)
       <MiniPlayground />
     </DocsSection>
 
-    <!-- Pill Player (Coming Soon) -->
+    <!-- Pill Player Section -->
     <DocsSection
       id="pill-player"
       title="Pill Player"
+      description="A pill-shaped audio player with waveform visualization"
     >
-      <ComingSoon player-type="Pill Player" />
+      <p class="player-intro">
+        The Pill Player combines a play button, waveform visualization, and timer in a compact
+        horizontal format. Perfect for podcasts, voice messages, and audio content that needs
+        more context than a simple button.
+      </p>
+    </DocsSection>
+
+    <!-- Pill Player - Examples -->
+    <DocsSection
+      id="pill-examples"
+      title="Examples"
+      description="Complete code examples for pill player styles"
+    >
+      <PillExamples />
     </DocsSection>
   </DocsLayout>
 </template>
